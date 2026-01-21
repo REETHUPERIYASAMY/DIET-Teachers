@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const TrainingSchema = new mongoose.Schema({
     topic: {
@@ -29,4 +29,4 @@ const TrainingSchema = new mongoose.Schema({
 
 const Training = mongoose.model('Training', TrainingSchema);
 
-export default Training;
+module.exports = Training;

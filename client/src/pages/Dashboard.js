@@ -22,7 +22,7 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
-            <h1>Welcome, {user.name}</h1>
+            <h1>Welcome, {user.email}</h1>
             <h2>Your Trainings</h2>
             <TrainingList trainings={trainings} />
         </div>

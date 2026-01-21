@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }) => {
             } catch (error) {
                 console.error('Failed to fetch user:', error);
                 setUser(null);
+                setIsAuthenticated(false);
             } finally {
                 setLoading(false);
             }
@@ -26,6 +28,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (credentials) => {
         const response = await apiClient.post('/auth/login', credentials);
         setUser(response.data.user);
+        setIsAuthenticated(true);
         localStorage.setItem('token', response.data.token);
     };
 
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, isAuthenticated: !!user }}>
             {children}
         </AuthContext.Provider>
     );

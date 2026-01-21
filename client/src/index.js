@@ -6,18 +6,19 @@ if (typeof window.process === 'undefined') {
 
 // ...regular React app bootstrap...
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { AuthProvider } from './context/AuthContext';
-import './index.css';
+import { AuthProvider } from './contexts/AuthContext';
+import './styles/main.css';
 
-createRoot(document.getElementById('root')).render(
+ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <App />
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );

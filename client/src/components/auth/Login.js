@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
 import apiClient from '../../api/apiClient';
 
@@ -7,17 +7,16 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { setAuthData } = useContext(AuthContext);
+    const { login } = useContext(AuthContext);
     const history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await apiClient.post('/auth/login', { email, password });
-            setAuthData(response.data);
+            await login({ email, password });
             history.push('/dashboard');
         } catch (err) {
-            setError('Invalid email or password');
+            setError(err.response?.data?.message || 'Login failed');
         }
     };
 
@@ -45,6 +44,7 @@ const Login = () => {
                 </div>
                 {error && <p className="error">{error}</p>}
                 <button type="submit">Login</button>
+                <p>Don't have an account? <Link to="/register">Register</Link></p>
             </form>
         </div>
     );

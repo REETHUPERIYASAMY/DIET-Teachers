@@ -1,44 +1,39 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Navbar from './components/common/Navbar';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import Login from './components/auth/Login';
-import TeacherForm from './pages/TeacherForm';
-import DietDashboard from './pages/DietDashboard';
-import TrainingPlanner from './pages/TrainingPlanner';
-import Repository from './pages/Repository';
-import Feedback from './pages/Feedback';
+import Register from './components/auth/Register';
+import Dashboard from './pages/Dashboard';
+import TrainerView from './pages/TrainerView';
+import TraineeView from './pages/TraineeView';
+import AdminPanel from './pages/AdminPanel';
 import './styles/main.css';
 
 function App() {
     return (
-        <AuthProvider>
-            <Router>
+        <div>
                 <Navbar />
                 <main style={{ padding: 16 }}>
-                    <Routes>
-                        <Route path="/" element={<Navigate to="/login" replace />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/teacher-form" element={
-                            <ProtectedRoute role="Teacher"><TeacherForm /></ProtectedRoute>
-                        }/>
-                        <Route path="/diet-dashboard" element={
-                            <ProtectedRoute role="DIET"><DietDashboard /></ProtectedRoute>
-                        }/>
-                        <Route path="/planner" element={
-                            <ProtectedRoute role="DIET"><TrainingPlanner /></ProtectedRoute>
-                        }/>
-                        <Route path="/repository" element={
-                            <ProtectedRoute role="DIET"><Repository /></ProtectedRoute>
-                        }/>
-                        <Route path="/feedback" element={
-                            <ProtectedRoute role="Teacher"><Feedback /></ProtectedRoute>
-                        }/>
-                    </Routes>
+                    <Switch>
+                        <Route exact path="/" render={() => <Redirect to="/login" />} />
+                        <Route path="/login" component={Login} />
+                        <Route path="/register" component={Register} />
+                        <Route path="/dashboard" render={() => (
+                            <ProtectedRoute><Dashboard /></ProtectedRoute>
+                        )}/>
+                        <Route path="/trainer" render={() => (
+                            <ProtectedRoute><TrainerView /></ProtectedRoute>
+                        )}/>
+                        <Route path="/trainee" render={() => (
+                            <ProtectedRoute><TraineeView /></ProtectedRoute>
+                        )}/>
+                        <Route path="/admin" render={() => (
+                            <ProtectedRoute><AdminPanel /></ProtectedRoute>
+                        )}/>
+                    </Switch>
                 </main>
-            </Router>
-        </AuthProvider>
+        </div>
     );
 }
 

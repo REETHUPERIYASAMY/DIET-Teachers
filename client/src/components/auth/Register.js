@@ -1,43 +1,34 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
 
 const Register = () => {
-    const { setAuth } = useContext(AuthContext);
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        role: 'teacher' // default role
-    });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [role, setRole] = useState('trainee');
     const [error, setError] = useState('');
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+    const history = useHistory();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await apiClient.post('/auth/register', formData);
-            setAuth(response.data);
+            await apiClient.post('/auth/register', { email, password, role });
+            history.push('/login');
         } catch (err) {
-            setError(err.response.data.message || 'Registration failed');
+            setError(err.response?.data?.message || 'Registration failed');
         }
     };
 
     return (
         <div className="register-container">
             <h2>Register</h2>
-            {error && <p className="error">{error}</p>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Email:</label>
                     <input
                         type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
@@ -45,19 +36,20 @@ const Register = () => {
                     <label>Password:</label>
                     <input
                         type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
                 <div>
                     <label>Role:</label>
-                    <select name="role" value={formData.role} onChange={handleChange}>
-                        <option value="teacher">Teacher</option>
+                    <select value={role} onChange={(e) => setRole(e.target.value)}>
+                        <option value="trainee">Trainee</option>
+                        <option value="trainer">Trainer</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
+                {error && <p className="error">{error}</p>}
                 <button type="submit">Register</button>
             </form>
         </div>

@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from '../../api/apiClient';
 
-const TrainingList = () => {
-    const [trainings, setTrainings] = useState([]);
-    const [loading, setLoading] = useState(true);
+const TrainingList = ({ trainings: propTrainings }) => {
+    const [trainings, setTrainings] = useState(propTrainings || []);
+    const [loading, setLoading] = useState(!propTrainings);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchTrainings = async () => {
-            try {
-                const response = await axios.get('/api/trainings');
-                setTrainings(response.data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+        if (!propTrainings) {
+            const fetchTrainings = async () => {
+                try {
+                    const response = await apiClient.get('/trainings');
+                    setTrainings(response.data);
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
 
-        fetchTrainings();
-    }, []);
+            fetchTrainings();
+        }
+    }, [propTrainings]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
