@@ -1,0 +1,32 @@
+const mongoose = require('mongoose');
+
+const issueSchema = new mongoose.Schema({
+  teacherId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  cluster: {
+    type: String,
+    required: true
+  },
+  subject: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'in-progress', 'resolved'],
+    default: 'pending'
+  }
+}, { timestamps: true });
+
+module.exports = mongoose.model('Issue', issueSchema);
